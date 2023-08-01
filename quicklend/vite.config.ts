@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 import react from '@vitejs/plugin-react'
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,5 +23,14 @@ export default defineConfig({
       },
     ]),
     renderer(),
-  ],
+  ], resolve: {
+    alias: {
+      '@src': '/src',
+      '@assets': '/src/assets',
+      '@components': '/src/components',
+      '@utils': '/src/utils',
+      '@[pages]': '/src/pages',
+
+    },
+  },
 })

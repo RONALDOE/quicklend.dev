@@ -23,7 +23,7 @@ function createWindow() {
     minWidth:800,
     minHeight:600,
     // autoHideMenuBar: true,
-    icon: path.join(process.env.PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.PUBLIC, 'QL.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
