@@ -18,7 +18,7 @@ router.get('/', (req, res) => {
     if (results.length > 0) {
       console.log(results)
       const customers = results
-      res.json({  customers });
+      res.send(customers) ;
       console.log(results)
       return {code: 1}
     } else {

@@ -1,10 +1,9 @@
 import Layout from "@components/Layout";
 import axios from "axios";
 import React, { useMemo, useState, useEffect } from "react";
-import { Column } from "react-table"; // Import the Column type from react-table
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
-import {Table} from "@components/React-Table";
+import { Table } from "@components/React-Table";
 
 interface ShowData {
   show: {
@@ -20,8 +19,8 @@ type Item = {
   name: string;
   price: number;
   quantity: number;
- }  
- interface Borrower {
+};
+interface Borrower {
   id: number;
   FULL_NAME: string;
   IDENTIFICATION_NUMBER: string;
@@ -32,7 +31,7 @@ type Item = {
   WORKING_TIME: string;
 }
 
-
+const columnHelper = createColumnHelper<Borrower>();
 
 export default function Customers() {
   const [borrowers, setBorrowers] = useState<Borrower[]>([]);
@@ -50,79 +49,104 @@ export default function Customers() {
 
     fetchBorrowers();
   }, []);
-    
-  const cols = useMemo<ColumnDef<Borrower>[]>(
-    () => [
-    {
-      // First group - Borrower Information
-      header: "Borrower Information",
-      columns: [
-        {
-          header: "ID",
-          cell: (row) => row.renderValue(),
-          accessorKeyKey: "id",
-        },
-        {
-          header: "Full Name",
-          cell: (row) => row.renderValue(),
-          accessorKey: "FULL_NAME",
-        },
-        {
-          header: "Identification Number",
-          cell: (row) => row.renderValue(),
-          accessorKey: "IDENTIFICATION_NUMBER",
-        },
-        {
-          header: "Phone",
-          cell: (row) => row.renderValue(),
-          accessorKey: "PHONE",
-        },
-        {
-          header: "Age",
-          cell: (row) => row.renderValue(),
-          accessorKey: "AGE",
-        },
-        {
-          header: "Address",
-          cell: (row) => row.renderValue(),
-          accessorKey: "ADDRESS",
-        },
-        {
-          header: "Workplace",
-          cell: (row) => row.renderValue(),
-          accessorKey: "WORKPLACE",
-        },
-        {
-          header: "Working Time",
-          cell: (row) => row.renderValue(),
-          accessorKey: "WORKING_TIME",
-        },
-      ],
-    },
-  ],
-  []
- );
 
-      const [data, setData] = useState([]);
+  //   const cols = useMemo<ColumnDef<Borrower>[]>(
+  //     () => [
+  //     {
+  //       // First group - Borrower Information
 
-      // Using useEffect to call the API once mounted and set the data
-      useEffect(() => {
-        (async () => {
-          const result = await axios.get(
-            "http://localhost:3001/api/customers"
-          );
-          setData(result.data);
-        })();
-      }, []);
+  //       columns: [
+  //         {
+  //           header: "ID",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "id",
+  //         },
+  //         {
+  //           header: "Full Name",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "FULL_NAME",
+  //         },
+  //         {
+  //           header: "Identification Number",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "IDENTIFICATION_NUMBER",
+  //         },
+  //         {
+  //           header: "Phone",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "PHONE",
+  //         },
+  //         {
+  //           header: "Age",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "AGE",
+  //         },
+  //         {
+  //           header: "Address",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "ADDRESS",
+  //         },
+  //         {
+  //           header: "Workplace",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "WORKPLACE",
+  //         },
+  //         {
+  //           header: "Working Time",
+  //           cell: (row) => row.renderValue(),
+  //           accessorKey: "WORKING_TIME",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  //   []
+  //  );
+  const columnHelper = createColumnHelper<Borrower>();
+
+  const columns = [
+    columnHelper.accessor("id", {
+      header: "ID",
+      cell: (row) => row.renderValue(),
+      enableResizing: true
+
+    }),
+    columnHelper.accessor("FULL_NAME", {
+      header: "Full Name",
+      cell: (row) => row.renderValue(),
+    }),
+    columnHelper.accessor("IDENTIFICATION_NUMBER", {
+      header: "Identification Number",
+      cell: (row) => row.renderValue(),
+    }),
+    columnHelper.accessor("PHONE", {
+      header: "Phone",
+      cell: (row) => row.renderValue(),
+    }),
+    columnHelper.accessor("AGE", {
+      header: "Age",
+      cell: (row) => row.renderValue(),
+    }),
+    columnHelper.accessor("ADDRESS", {
+      header: "Address",
+      cell: (row) => row.renderValue(),
+    }),
+    columnHelper.accessor("WORKPLACE", {
+      header: "Workplace",
+      cell: (row) => row.renderValue(),
+    }),
+    columnHelper.accessor("WORKING_TIME", {
+      header: "Working Time",
+      cell: (row) => row.renderValue(),
+    }),
+  ] as ColumnDef<Borrower>[];
+
+  console.log(borrowers);
+
   return (
     <Layout>
-        <div className="col-span-full h-96 w-full rounded-lg bg-white px-4 py-5 shadow overflow-auto">      
-        <Table columns={cols} data={borrowers} />
-</div> 
+      <div className=" h-96 w-full rounded-lg bg-white  shadow ">
+        <Table columns={columns} data={borrowers}  />
+      </div>
     </Layout>
-  )
+  );
 }
-
-
-
-
