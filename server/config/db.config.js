@@ -6,6 +6,7 @@ const db = mysql.createConnection({
     user: "remote",
     password: "password123",
     database: "quicklend",
+    multipleStatements: true
   });
 
 

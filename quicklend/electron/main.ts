@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Menu, MenuItem } from 'electron'
 import path from 'node:path'
 
 // The built directory structure
@@ -28,7 +28,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
     },
   })
-
+  // win.setMenu(null)
   // Test active push message to Renderer-process.
   win.webContents.on('did-finish-load', () => {
     win?.webContents.send('main-process-message', (new Date).toLocaleString())
@@ -42,6 +42,19 @@ function createWindow() {
     win.loadFile(path.join(process.env.DIST, 'index.html'))
   }
 }
+
+
+// const menu = new Menu()
+// menu.append(new MenuItem({
+//   label: 'Electron',
+//   submenu: [{
+//     role: 'help',
+//     accelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+I',
+//     click: () => { console.log('Electron rocks!') }
+//   }]
+// }))
+
+// Menu.setApplicationMenu(menu)
 
 app.on('window-all-closed', () => {
   win = null

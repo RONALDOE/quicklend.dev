@@ -24,6 +24,7 @@ CREATE TABLE Borrowers
     IDENTIFICATION_NUMBER VARCHAR(512),
     PHONE VARCHAR(512),
     AGE VARCHAR(512),
+    SEX ENUM('Hombre', 'Mujer'),
     ADDRESS VARCHAR(512),
     WORKPLACE VARCHAR(512),
     WORKING_TIME VARCHAR(512)
@@ -59,3 +60,50 @@ INSERT INTO Borrowers (FULL_NAME, IDENTIFICATION_NUMBER, PHONE, AGE, ADDRESS, WO
 	('WALTER MANUEL PEREZ DE LA PAZ', '001-1448937-0', '809-716-1244', '42 YEARS', 'CALLE FELIZ GARCIA #61, PADRO ORIENTAL', 'ZF POINT BLACK', '4 MONTHS'),
 	('JENNIFER NEPOMUCENO', '402-3980840-1', '829-856-1896', '26', 'CALLE MONICA MOTA #27. EL TAMARINDO', 'ZF POINT BLANK', '6 MONTHS'),
 	('LUCIEL GERONIMO VANDERHORT', '001-1576473-0', '809-316-7610', '42', 'CALLE PRIMERA #91, PUEBLO NUEVO, VILLA DUARTE', 'ZF POINT BLANK', '9  MONTHS');
+    
+    CREATE TABLE Loans (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  borrower_id INT,
+  importeCredito DECIMAL(10, 2),
+  modalidad ENUM('Mensual', 'Semanal', 'Quincenal', 'Diario'),
+  tasa DECIMAL(5, 2),
+  numCuotas INT,
+  importeCuotas DECIMAL(10, 2),
+  totalAPagar DECIMAL(10, 2),/*Total pagado se verificara buscando cuanto ha pagado tal cliente a tal prestamo*/
+  fecha DATE,
+  cuotasSegunModalidad VARCHAR(255),
+  FOREIGN KEY (borrower_id) REFERENCES Borrowers (id)
+);
+
+    CREATE TABLE LoansDrafts (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  borrower_id INT,
+  importeCredito DECIMAL(10, 2),
+  modalidad ENUM('Mensual', 'Semanal', 'Quincenal', 'Diario'),
+  tasa DECIMAL(5, 2),
+  numCuotas INT,
+  importeCuotas DECIMAL(10, 2),
+  totalAPagar DECIMAL(10, 2),/*Total pagado se verificara buscando cuanto ha pagado tal cliente a tal prestamo*/
+  fecha DATE,
+  cuotasSegunModalidad VARCHAR(255),
+  FOREIGN KEY (borrower_id) REFERENCES Borrowers (id)
+);
+
+CREATE TABLE Payments (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  loan_id INT,
+  cuotaNumero INT,
+  fechaPago DATE,
+  montoPagado DECIMAL(10, 2),
+  status ENUM('Pagado', 'No Pagado', 'Vencido'),
+  fechaAPagar date,
+  FOREIGN KEY (loan_id) REFERENCES Loans (id)
+);
+
+Create Table Ranking(
+id INT PRIMARY KEY AUTO_INCREMENT,
+borrower_id INT,
+ranking_level decimal (10,2),
+notes varchar(255),
+FOREIGN KEY (borrower_id) REFERENCES Borrowers (id)
+)
