@@ -27,8 +27,15 @@
   const loans = require('./routes/loans.route')
   app.use("/api/loans", loans)
 
-  const pdf = require('./routes/generatepdf')
-  app.use("/api/pdf", pdf)
+  const reports = require('./routes/reports.route')
+  app.use("/api/reports", reports)
+  
+  const payments = require('./routes/payments.route')
+  app.use("/api/payments", payments)
+
+  const users = require('./routes/users.route')
+  app.use("/api/users", users)
+
 
   app.get('/', (req, res) => {
     res.send('Servidor Inicializado Correctamente!');

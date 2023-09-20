@@ -62,7 +62,7 @@ export default function LoanCalculator() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/borrowers");
+        const response = await fetch("http://localhost:3001/api/borrowers/active");
         const jsonData = await response.json();
         setAllBorrowers(jsonData);
         setBorrowers(jsonData);
@@ -74,6 +74,7 @@ export default function LoanCalculator() {
     fetchData();
   }, []);
 
+  
   const searchBorrower = (query: string) => {
     const filteredBorrowers = allBorrowers.filter((b) =>
       b.FULL_NAME.toLowerCase().includes(query.toLowerCase()),
@@ -168,7 +169,6 @@ export default function LoanCalculator() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    console.log(name + ":", value);
 
     if (name === "importeCredito") {
       const formattedValue = parseFloat(value.replace(/,/g, ""));
@@ -251,6 +251,75 @@ export default function LoanCalculator() {
     // history.push("/dashboard");
   }
 
+  const [drafts, setDrafts] = useState<string[]>([]); // Estado para almacenar los borradores
+  const [selectedDraft, setSelectedDraft] = useState<string | null>(null); // Estado para el borrador seleccionado
+
+
+  // const saveDraft = () => {
+  //   // Validar los campos aquí antes de guardar
+  //   if (
+  //     !formData.borrower ||
+  //     !formData.importeCredito ||
+  //     !formData.modalidad ||
+  //     !formData.tasa ||
+  //     !formData.numCuotas ||
+  //     !formData.cuotasSegunModalidad
+  //   ) {
+  //     setErrorPopup("Por favor, completa todos los campos.");
+  //     return;
+  //   }
+
+  //   // Convertir valores formateados a valores numéricos
+  //   const importeCredito = parseFloat(formData.importeCredito.replace(/,/g, ""));
+  //   const tasa = parseFloat(formData.tasa);
+  //   const numCuotas = parseInt(formData.numCuotas);
+  //   const cuotasSegunModalidad = parseInt(formData.cuotasSegunModalidad);
+
+  //   // Crear el objeto con los valores numéricos para guardar como borrador
+  //   const draftData = {
+  //     ...formData
+  //     // ... otros campos
+  //   };
+
+  //   // Enviar el borrador a la base de datos
+  //   axios.post("http://localhost:3001/api/loans/drafts", draftData)
+  //     .then(() => {
+  //       setSuccessPopup("Borrador Guardado Con Éxito");
+  //       // Actualizar la lista de borradores después de guardar
+  //       setDrafts((prevDrafts) => [...prevDrafts, draftData]);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error al guardar el borrador:", error);
+  //     });
+  // };
+
+  
+  useEffect(() => {
+    // Cargar los borradores desde la base de datos
+    const fetchDrafts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/api/loans/drafts");
+        const draftData = response.data; // Asumiendo que los borradores se devuelven como un array de objetos
+        setDrafts(draftData);
+      } catch (error) {
+        console.error("Error al cargar los borradores:", error);
+      }
+    };
+
+    fetchDrafts();
+  }, []);
+
+  const loadDraft = (draft: string) => {
+    const draftData = JSON.parse(draft);
+    setFormData({
+     ...draftData
+    });
+    setSelectedDraft(draft);
+    setSuccessPopup("Borrador Cargado");
+  };
+
+  
+
   const handleSaveDraft = async () => {
     // Validar los campos aquí antes de enviar
 
@@ -268,21 +337,24 @@ export default function LoanCalculator() {
 
     // Convertir valores formateados a valores numéricos
     const importeCredito = parseFloat(
-      formData.importeCredito.replace(/,/g, ""),
+      formData.importeCredito.replace(',', ""),
+    );
+    const totalAPagar = parseFloat(
+      formData.totalAPagar.replace(',', ""),
     );
     const tasa = parseFloat(formData.tasa);
     const numCuotas = parseInt(formData.numCuotas);
     const cuotasSegunModalidad = parseInt(formData.cuotasSegunModalidad);
+    console.log(importeCredito)
 
     // Crear el objeto con los valores numéricos para enviar a la API
     const requestData = {
-      borrower: formData.borrower,
+      ...formData,
       importeCredito,
-      modalidad: formData.modalidad,
       tasa,
       numCuotas,
       cuotasSegunModalidad,
-      // ... otros campos
+      totalAPagar
     };
 
     try {
@@ -428,9 +500,27 @@ export default function LoanCalculator() {
     formData.cuotasSegunModalidad,
   ]);
 
+  const handleClearAll = () =>{
+    setFormData({
+      borrower: "",
+      importeCredito: "",
+      modalidad: "",
+      tasa: "7.00", // Puedes establecer el valor predeterminado que desees aquí
+      numCuotas: "",
+      importeCuotas: "",
+      totalAPagar: "",
+      fecha: defaultDate,
+      cuotasSegunModalidad: "",
+      interes: "",
+    });
+  
+    setBorrower("");
+  }
   return (
     <Layout>
-      <div className=" mt-4 flex h-full items-center justify-center ">
+      
+      
+      <div className="  flex h-full items-center justify-center ">
         <form
           onSubmit={handleSubmit}
           className="relative mb-4 grid w-full grid-flow-dense grid-cols-1 gap-3 rounded bg-white px-8 pb-8 pt-6 shadow-md md:grid-cols-2"
@@ -600,14 +690,49 @@ export default function LoanCalculator() {
               type="submit"
               className="focus:shadow-outline col-span-2 w-1/2 rounded  bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
             > Continuar</button>
+           {/* <button
+          type="button"
+          className="focus:shadow-outline col-span-2 w-1/2 rounded  bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700 focus:outline-none hover:cursor-pointer"
+          onClick={() => {
+            if (selectedDraft) {
+              // Si hay un borrador seleccionado, lo guardamos nuevamente
+              handleSaveDraft();
+            } else {
+              // Si no hay un borrador seleccionado, lo cargamos en la lista
+              loadDraft(JSON.stringify(formData));
+            }
+          }}
+        >
+          {selectedDraft ? "Guardar Borrador" : "Cargar Borrador"}
+        
+          </div>
+          <div className="col-span-2">
+        {drafts.length > 0 && (
+          <div className="mb-4">
+            <p className="mb-2 block text-sm font-bold text-gray-700">
+              Borradores Guardados:
+            </p>
+            <ul>
+              {drafts.map((draft, index) => (
+                <li
+                  key={index}
+                  className="cursor-pointer hover:underline text-blue-500"
+                  onClick={() => loadDraft(draft)}
+                >
+                  Borrador {index + 1}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )} */}
             <input
               type="button"
-              className="focus:shadow-outline col-span-2 w-1/2 rounded  bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700 focus:outline-none"
+              className="focus:shadow-outline col-span-2 w-1/2 rounded  bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none hover:cursor-pointer"
               // disabled={isSubmitting || isSavedDraftLoading }
-              onClick={handleSaveDraft}
-              value={"Guardar Borrador"}
+              onClick={handleClearAll}
+              value={"Limpiar Campos"}
             />
-          </div>
+      </div>
         </form>
       </div>
       {errorPopup && (

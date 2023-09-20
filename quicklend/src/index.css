@@ -281,3 +281,18 @@ html, body{
     transform: rotate(360deg);
   }
 }
+
+  /* .MuiPaper-root{
+    max-height: 100%;
+    overflow: auto;
+  }
+   */
+
+.MuiTableHead-root{
+  position: sticky; top: 0;
+}
+
+ #userTableWrapper > .MuiPaper-root  {
+  height: inherit !important;
+  overflow:scroll;
+}

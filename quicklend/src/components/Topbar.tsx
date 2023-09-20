@@ -1,15 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-
 export default function Topbar() {
   const location = useLocation();
+
+  
   const activeStyle = 'outline-2 outline-blue-200 outline outline-offset-2  bg-blue-200'
   return (
     <div className="h-12 w-full bg-blue-600 shadow left-0 z-20">
       <div className="container mx-auto h-full flex items-center justify-around px-4">
         <h2 className="text-xl font-bold">DOSECOM</h2>
-        <ul className="space-x-6 flex flex-row  items-center">
+        <ul className="space-x-4 flex flex-row  items-center">
           <li>
             <Link to="/home" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
             ${   location.pathname === '/home' ? activeStyle : ''
@@ -33,10 +34,25 @@ export default function Topbar() {
             </Link>
           </li>
           <li>
-            <Link to="/loan" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
-            ${   location.pathname === '/loan' ? activeStyle : ''
+          <Link to="/loans" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
+            ${   location.pathname === '/loans' ? activeStyle : ''
              } `}>
-              Settings
+              Prestamos
+            </Link>
+          </li>
+          
+          <li>
+            <Link to="/payments" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
+            ${   location.pathname === '/payments' ? activeStyle : ''
+             } `}>
+              Pagos
+            </Link>
+          </li>
+          <li>
+          <Link to="/settings" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
+            ${   location.pathname === '/settings' ? activeStyle : ''
+             } `}>
+              Ajustes
             </Link>
           </li>
           <li>
@@ -47,7 +63,7 @@ export default function Topbar() {
             </a>
           </li>
         </ul>
-      <h2 className="text-xl font-bold">      <Clock />
+      <h2 className="text-xl font-bold"><Clock />
 </h2>
       </div>
 

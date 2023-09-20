@@ -1,7 +1,21 @@
 import Layout from "../components/Layout";
 import ReactECharts, { ReactEChartsProps } from "../components/Piechart";
+import { useEffect, useState } from "react";
+import axios from 'axios'
 
 //rueda
+
+interface Data{
+    noPagos: number | 0,
+    pagos: number | 0,
+    prestamosActivos:number | 0, 
+    totalPrestado:number | 0,
+    cantidadBorrowers:number | 0,
+    gananciasDelMes:number | 0,
+    pagosSemanales:number | 0,
+    pagosDiarios:number| 0
+
+}
 export default function Home() {
   //      const option: ReactEChartsProps["option"] = {
 
@@ -65,6 +79,46 @@ export default function Home() {
   //         ]
   //       };
 
+  const [stats, setStats] = useState<Data |null >(null)
+  const [mounted, setIsMounted] = useState<boolean >(false)
+  
+
+  function formatNumberK(num: number) {
+    if (num < 1000) {
+      return num;
+    } else if (num >= 1000 && num < 10000) {
+      return (num / 1000).toFixed(1) + 'K';
+    } else if (num >= 10000 && num < 100000) {
+      return (num / 1000).toFixed(1) + 'K';
+    } else if (num >= 100000 && num < 1000000) {
+      return (num / 1000).toFixed(1) + 'K';
+    } else {
+      return (num / 1000).toFixed(2) + 'K';
+    }
+  }
+  
+
+  useEffect(()=>{
+  const fetchData = async ()  =>{
+    try{
+      console.log(mounted)
+      const response = await axios.get<Data>('http://localhost:3001/api/dashboard/stats')
+      
+      console.log(' data fetched successfully');
+      setStats({...stats,...response.data})
+      console.log(stats)
+      setIsMounted(true)
+        
+    }catch(err){
+      console.log(`Error Fetching The Data \n\n` +  err)
+      return
+    }
+  }
+  fetchData()
+}, [mounted]
+    )
+    const chartValue = (stats?.noPagos || 0) + (stats?.pagos|| 0)
+console.log((stats?.noPagos || 0) + (stats?.pagos|| 0))
   /*Pie Chart*/
   const optionPie: ReactEChartsProps["option"] = {
     tooltip: {
@@ -90,10 +144,10 @@ export default function Home() {
           },
         },
         data: [
-          { value: 1048, name: "Pagos" },
-          { value: 735, name: "Sin Pagar" },
+          { value: stats?.pagos, name: "Pagos" },
+          { value: stats?.noPagos, name: "Sin Pagar" },
           {
-            value: 1048 + 735,
+            value: chartValue,
             itemStyle: {
               color: "none", // Stop the chart from rendering this piece
               decal: {
@@ -183,20 +237,13 @@ export default function Home() {
       <div className="container mx-auto  h-fit overflow-auto">
         <div className="h-fit overflow-auto">
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-4">
-            <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
-              <div className="truncate text-sm font-medium text-gray-500">
-                Prestado
-              </div>
-              <div className="mt-1 text-3xl font-semibold text-gray-900">
-                NODATA
-              </div>
-            </div>
+            
             <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
               <div className="truncate text-sm font-medium text-gray-500">
                 Prestamos Activos
               </div>
               <div className="mt-1 text-3xl font-semibold text-gray-900">
-                NODATA
+                {stats?.prestamosActivos}
               </div>
             </div>
             <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
@@ -204,7 +251,15 @@ export default function Home() {
                 Clientes
               </div>
               <div className="mt-1 text-3xl font-semibold text-gray-900">
-                NODATA
+                {stats?.cantidadBorrowers}
+              </div>
+            </div>
+            <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
+              <div className="truncate text-sm font-medium text-gray-500">
+                Prestado
+              </div>
+              <div className="mt-1 text-3xl font-semibold text-gray-900">
+                {"$"+formatNumberK(Number(stats?.totalPrestado))}
               </div>
             </div>
             <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
@@ -212,7 +267,7 @@ export default function Home() {
                 Ganancias del mes
               </div>
               <div className="mt-1 text-3xl font-semibold text-gray-900">
-                NODATA
+                { "$"+formatNumberK(Number(stats?.gananciasDelMes))}
               </div>
             </div>
 
