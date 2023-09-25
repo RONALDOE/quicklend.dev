@@ -568,8 +568,6 @@ export default function LoanCalculator() {
               name="fecha"
               value={formData.fecha}
               onChange={handleChange}
-              min={defaultDate}
-              max={`${year}-12-31`}
               className="focus:shadow-outline w-full  appearance-none rounded border border-gray-400 px-3 py-2 leading-tight text-gray-700 focus:outline-none"
             />
           </div>

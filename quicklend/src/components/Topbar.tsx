@@ -49,10 +49,10 @@ export default function Topbar() {
             </Link>
           </li>
           <li>
-          <Link to="/settings" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
+          <Link to="/Usuarios" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
             ${   location.pathname === '/settings' ? activeStyle : ''
              } `}>
-              Ajustes
+              Usuarios
             </Link>
           </li>
           <li>

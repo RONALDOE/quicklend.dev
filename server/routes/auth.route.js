@@ -91,8 +91,8 @@ router.post("/send-recovery-email", (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "est.ronaldoernesto@gmail.com",
-      pass: "uqbx lamt xtui bqnz",
+      user: "quicklend.services@gmail.com",
+      pass: "zheb uptl gibg quxb",
     },
   });
 
@@ -111,7 +111,7 @@ router.post("/send-recovery-email", (req, res) => {
       console.log(results)
       const username = results[0].username
       const mailOptions = {
-        from: "est.ronaldoernesto@gmail.com",
+        from: "quicklend.services@gmail.com",
         to: email,
         subject: `Recuperación de contraseña - ${username}`,
         text: `Tu Codigo de Recuperacion Es ${randomCode}`,

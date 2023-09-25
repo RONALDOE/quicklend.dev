@@ -1,20 +1,23 @@
 import Layout from "../components/Layout";
 import ReactECharts, { ReactEChartsProps } from "../components/Piechart";
 import { useEffect, useState } from "react";
-import axios from 'axios'
+import axios from "axios";
+import { Link } from "react-router-dom";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 
 //rueda
 
-interface Data{
-    noPagos: number | 0,
-    pagos: number | 0,
-    prestamosActivos:number | 0, 
-    totalPrestado:number | 0,
-    cantidadBorrowers:number | 0,
-    gananciasDelMes:number | 0,
-    pagosSemanales:number | 0,
-    pagosDiarios:number| 0
-
+interface Data {
+  noPagos: number | 0;
+  pagos: number | 0;
+  prestamosActivos: number | 0;
+  totalPrestado: number | 0;
+  cantidadBorrowers: number | 0;
+  gananciasDelMes: number | 0;
+  pagosSemanales: number | 0;
+  pagosDiarios: number | 0;
 }
 export default function Home() {
   //      const option: ReactEChartsProps["option"] = {
@@ -79,46 +82,44 @@ export default function Home() {
   //         ]
   //       };
 
-  const [stats, setStats] = useState<Data |null >(null)
-  const [mounted, setIsMounted] = useState<boolean >(false)
-  
+  const [stats, setStats] = useState<Data | null>(null);
+  const [mounted, setIsMounted] = useState<boolean>(false);
 
   function formatNumberK(num: number) {
     if (num < 1000) {
       return num;
     } else if (num >= 1000 && num < 10000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return (num / 1000).toFixed(1) + "K";
     } else if (num >= 10000 && num < 100000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return (num / 1000).toFixed(1) + "K";
     } else if (num >= 100000 && num < 1000000) {
-      return (num / 1000).toFixed(1) + 'K';
+      return (num / 1000).toFixed(1) + "K";
     } else {
-      return (num / 1000).toFixed(2) + 'K';
+      return (num / 1000).toFixed(2) + "K";
     }
   }
-  
 
-  useEffect(()=>{
-  const fetchData = async ()  =>{
-    try{
-      console.log(mounted)
-      const response = await axios.get<Data>('http://localhost:3001/api/dashboard/stats')
-      
-      console.log(' data fetched successfully');
-      setStats({...stats,...response.data})
-      console.log(stats)
-      setIsMounted(true)
-        
-    }catch(err){
-      console.log(`Error Fetching The Data \n\n` +  err)
-      return
-    }
-  }
-  fetchData()
-}, [mounted]
-    )
-    const chartValue = (stats?.noPagos || 0) + (stats?.pagos|| 0)
-console.log((stats?.noPagos || 0) + (stats?.pagos|| 0))
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        console.log(mounted);
+        const response = await axios.get<Data>(
+          "http://localhost:3001/api/dashboard/stats",
+        );
+
+        console.log(" data fetched successfully");
+        setStats({ ...stats, ...response.data });
+        console.log(stats);
+        setIsMounted(true);
+      } catch (err) {
+        console.log(`Error Fetching The Data \n\n` + err);
+        return;
+      }
+    };
+    fetchData();
+  }, [mounted]);
+  const chartValue = (stats?.noPagos || 0) + (stats?.pagos || 0);
+  console.log((stats?.noPagos || 0) + (stats?.pagos || 0));
   /*Pie Chart*/
   const optionPie: ReactEChartsProps["option"] = {
     tooltip: {
@@ -234,10 +235,9 @@ console.log((stats?.noPagos || 0) + (stats?.pagos|| 0))
 
   return (
     <Layout>
-      <div className="container mx-auto  h-fit overflow-auto">
+      <div className="container mx-auto  -mb-6 h-fit overflow-auto">
         <div className="h-fit overflow-auto">
           <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-4">
-            
             <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
               <div className="truncate text-sm font-medium text-gray-500">
                 Prestamos Activos
@@ -259,7 +259,7 @@ console.log((stats?.noPagos || 0) + (stats?.pagos|| 0))
                 Prestado
               </div>
               <div className="mt-1 text-3xl font-semibold text-gray-900">
-                {"$"+formatNumberK(Number(stats?.totalPrestado))}
+                {"$" + formatNumberK(Number(stats?.totalPrestado))}
               </div>
             </div>
             <div className="w-full rounded-lg bg-white px-4 py-5 shadow">
@@ -267,30 +267,142 @@ console.log((stats?.noPagos || 0) + (stats?.pagos|| 0))
                 Ganancias del mes
               </div>
               <div className="mt-1 text-3xl font-semibold text-gray-900">
-                { "$"+formatNumberK(Number(stats?.gananciasDelMes))}
+                {"$" + formatNumberK(Number(stats?.gananciasDelMes))}
               </div>
             </div>
 
-            <div className="col-span-3 h-96 w-full rounded-lg bg-white px-4 py-5 shadow">
-              <div className="truncate text-sm font-medium text-gray-500">
-                Total Prestamos Activos
-              </div>
+            <div className="col-span-4 flex h-96 w-full flex-row items-center justify-center gap-16 rounded-lg bg-white px-4 py-5 shadow">
+              <Link
+                to="/loanCalculator"
+                className="flex h-40 w-40 items-center flex-col justify-center rounded bg-blue-300 "
+                title="Prestar"
+              >
+                <RequestQuoteIcon sx={{ fontSize: 100 }} />{" "}
+                <p className="truncate text-xl font-bold text-black">Prestamo</p>
 
-              <ReactECharts option={optionBar} />
+              </Link>
+              <Link
+                to="/customers"
+                className="flex h-40 w-40 flex-col items-center justify-center gap-4 rounded bg-blue-300"
+                title="Clientes"
+                >
+                <PeopleAltIcon sx={{ fontSize: 100 }} />
+                <p className="truncate text-xl font-bold text-black">Clientes</p>
+              </Link>
+              <Link
+                to="/payments"
+                className="flex h-40 w-40 items-center flex-col justify-center rounded bg-blue-300  "
+                title="Pagar"
+              >
+                <PaymentsIcon sx={{ fontSize: 100 }} />
+                <p className="truncate text-xl font-bold text-black">Pagos</p>
+
+              </Link>
             </div>
-            <div className="col-span-1 h-96 w-full rounded-lg bg-white px-4 py-5 shadow">
+            {/* <div className="col-span-1 h-96 w-full rounded-lg bg-white px-4 py-5 shadow">
               <div className="truncate text-sm font-medium text-gray-500">
                 Pagos del dia
               </div>
 
               <ReactECharts option={optionPie} />
-            </div>
-
-            <div className="col-span-full h-96 w-full rounded-lg bg-white px-4 py-5 shadow overflow-auto"></div>
-            
+            </div> */}
           </div>
         </div>
       </div>
     </Layout>
   );
 }
+
+interface Cliente {
+  id: number;
+  FULL_NAME: string;
+  totalAPagar: number;
+  importeCuotas: number;
+  fechaAPagar: string;
+}
+
+interface ClientesCercanos {
+  atrasados: Cliente[];
+  deHoy: Cliente[];
+  deManana: Cliente[];
+}
+
+const ClientesConPagosCercanos: React.FC = () => {
+  const [clientes, setClientes] = useState<ClientesCercanos>({
+    atrasados: [],
+    deHoy: [],
+    deManana: [],
+  });
+
+  useEffect(() => {
+    // Realiza una solicitud HTTP GET a la ruta del servidor que proporciona los datos
+    fetch("http://localhost:3001/api/dashboard/clientes-pagos-cercanos")
+      .then((response) => response.json())
+      .then((data: ClientesCercanos) => setClientes(data))
+      .catch((error) => console.error("Error al obtener datos:", error));
+  }, []);
+
+  // Función para determinar el color de la fecha
+  const getFechaColor = (fecha: string) => {
+    const currentDate = new Date();
+    const parsedFecha = new Date(fecha);
+
+    if (parsedFecha < currentDate) {
+      return "rojo";
+    } else if (parsedFecha.toDateString() === currentDate.toDateString()) {
+      return "negro";
+    } else {
+      return "verde";
+    }
+  };
+
+  return (
+    <div>
+      <h2>Clientes con Pagos Cercanos</h2>
+      <div className="clientes-list">
+        <div>
+          <h3>Atrasados</h3>
+          <ul>
+            {clientes.atrasados.map((cliente) => (
+              <li
+                key={cliente.id}
+                className={`fecha-${getFechaColor(cliente.fechaAPagar)}`}
+              >
+                {cliente.FULL_NAME} - {cliente.id} - {cliente.totalAPagar} -{" "}
+                {cliente.importeCuotas} - {cliente.fechaAPagar}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>De Hoy</h3>
+          <ul>
+            {clientes.deHoy.map((cliente) => (
+              <li
+                key={cliente.id}
+                className={`fecha-${getFechaColor(cliente.fechaAPagar)}`}
+              >
+                {cliente.FULL_NAME} - {cliente.id} - {cliente.totalAPagar} -{" "}
+                {cliente.importeCuotas} - {cliente.fechaAPagar}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>De Mañana</h3>
+          <ul>
+            {clientes.deManana.map((cliente) => (
+              <li
+                key={cliente.id}
+                className={`fecha-${getFechaColor(cliente.fechaAPagar)}`}
+              >
+                {cliente.FULL_NAME} - {cliente.id} - {cliente.totalAPagar} -{" "}
+                {cliente.importeCuotas} - {cliente.fechaAPagar}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};

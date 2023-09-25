@@ -61,9 +61,9 @@ export default function Settings() {
                 <p
                   className="flex cursor-pointer items-center space-x-3 rounded-md p-2"
                   onClick={() => {
-                    setUserShowing(true)
-                    setReportsShowing(false)
-                    setQueryShowing(false)
+                    setUserShowing(true);
+                    setReportsShowing(false);
+                    setQueryShowing(false);
                   }}
                 >
                   <SupervisedUserCircleIcon fontSize="large" />
@@ -71,12 +71,12 @@ export default function Settings() {
                 </p>
               </li>
               <li className="rounded-sm">
-              <p
+                <p
                   className="flex cursor-pointer items-center space-x-3 rounded-md p-2"
                   onClick={() => {
-                    setUserShowing(false)
-                    setReportsShowing(true)
-                    setQueryShowing(false)
+                    setUserShowing(false);
+                    setReportsShowing(true);
+                    setQueryShowing(false);
                   }}
                 >
                   <AdfScannerIcon fontSize="large" />
@@ -84,12 +84,12 @@ export default function Settings() {
                 </p>
               </li>
               <li className="rounded-sm">
-              <p
+                <p
                   className="flex cursor-pointer items-center space-x-3 rounded-md p-2"
                   onClick={() => {
-                    setUserShowing(false)
-                    setReportsShowing(false)
-                    setQueryShowing(true)
+                    setUserShowing(false);
+                    setReportsShowing(false);
+                    setQueryShowing(true);
                   }}
                 >
                   <DataObjectIcon fontSize="large" />
@@ -105,19 +105,9 @@ export default function Settings() {
   return (
     <Layout>
       <div className="flex h-full w-full">
-        <Sidebar />
 
-        {userShowing ? (
           <UsersTable />
-        ) : reportsShowing ? (
-          <Reports />
-        ) : queryShowing ? (
-          <UsersTable />
-        ) : (
-          <>Select An Option</>
-        )}
-
-        {}
+       
       </div>
     </Layout>
   );
@@ -212,10 +202,10 @@ const UsersTable = () => {
     }
   };
   return (
-    <>
+    <div >
       {!isLoading && (
         <div
-          className=" ml-8 h-full w-3/4 rounded-lg bg-white shadow"
+          className=" mx-8 my-4 h-full  rounded-lg bg-white shadow"
           id="userTableWrapper"
         >
           <MaterialReactTable
@@ -239,10 +229,15 @@ const UsersTable = () => {
                 onClick={() => setCreateModalOpen(true)}
                 variant="contained"
               >
-                Crear Nuevo Cliente
+                Crear Nuevo Usuario
               </Button>
             )}
           />
+          {isLoading && (
+            <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="lds-dual-ring"></div>
+            </div>
+          )}
           <CreateNewAccountModal
             columns={columns}
             open={createModalOpen}
@@ -252,12 +247,9 @@ const UsersTable = () => {
         </div>
       )}
 
-      {isLoading && (
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="lds-dual-ring"></div>
-        </div>
-      )}
-    </>
+     
+            
+    </div>
   );
 };
 
@@ -326,15 +318,100 @@ export const CreateNewAccountModal = ({
   );
 };
 
-const Reports = () => {
-  return (
-    <div className="ml-8 h-full w-3/4 rounded-lg bg-white shadow">
-      <button
-        className="-mt-10 rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700 focus:outline-none"
-        onClick={() => console.log("yei")}
-      >
-        Do Complete Report{" "}
-      </button>
-    </div>
-  );
-};
+// const Reports = () => {
+//   const [isLoading, setIsLoading] = useState(false);
+
+//   const handleReports = async () => {
+//     console.log("yeu");
+//     setIsLoading(true);
+//     try {
+//       const response = await axios.get("http://localhost:3001/api/reports/email-pdf"); // Replace with your API endpoint
+//       console.log(response.data);
+//       const blob = new Blob([response.data], { type: "application/pdf" });
+//       const url = window.URL.createObjectURL(blob);
+
+//       // Abre una nueva ventana/tab con el PDF
+//       window.open(url);
+//       setIsLoading(false);
+//     } catch (error) {
+//       console.error("Error fetching users:", error);
+//       setIsLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="ml-8 h-full w-3/4 rounded-lg bg-white shadow">
+//       <button
+//         className="-mt-10 rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700 focus:outline-none"
+//   onClick={ handleReports} // Llama a la función handleReports con ()
+//       >
+//         Hacer Reporte e Imprimirlo
+//       </button>
+//       {isLoading && (
+//         <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
+//           <div className="lds-dual-ring"></div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// const QueryComponent: React.FC = () => {
+//   const [query, setQuery] = useState<string>("");
+//   const [result, setResult] = useState();
+
+//   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setQuery(e.target.value);
+//   };
+
+//   const executeQuery = async () => {
+//     try {
+//       // Simulación de una llamada a una API en el servidor Node.js
+//       console.log(query)
+//       const response = await fetch("http://localhost:3001/query", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify({ query }), // Enviar la consulta al servidor
+//       });
+      
+      
+//       if (!response.ok) {
+//         throw new Error("Error al ejecutar la consulta.");
+//       }
+      
+//       // Obtener el resultado de la respuesta JSON
+//       const data = await response.json();
+//       console.log(typeof(data))
+
+//       // Actualizar el estado result con el resultado de la consulta
+//       setResult(data.result);
+//     } catch (error) {
+//       console.error("Error al ejecutar la consulta:", error);
+//       setResult("Error: No se pudo ejecutar la consulta.");
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h1>Consulta</h1>
+//       <div>
+//         <input
+//           type="text"
+//           placeholder="Escribe tu consulta..."
+//           value={query}
+//           onChange={handleQueryChange}
+//         />
+//       </div>
+//       <button onClick={executeQuery}>Ejecutar Consulta</button>
+//       <h2>Resultado</h2>
+//       <div>
+//       <ul>
+//     {result.map((item, index) => (
+//       <li key={index}>{JSON.stringify(item)}</li>
+//     ))}
+//   </ul>      </div>
+//     </div>
+//   );
+// };

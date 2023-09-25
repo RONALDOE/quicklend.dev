@@ -74,6 +74,7 @@ router.put('/', (req, res) => {
         SELECT id FROM LOANS 
         WHERE borrower_id = ? 
         AND loanStatus != 'Completed' 
+        AND loanStatus != 'Dummy' 
         ORDER BY fecha DESC 
         LIMIT 1
       `;

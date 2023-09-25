@@ -32,7 +32,6 @@ import {
   Tooltip,
 } from "@mui/material";
 
-// Definición de la interfaz Borrower
 interface Loan {
   id: number;
   borrowerName: string;
@@ -74,27 +73,24 @@ export default function Customers() {
     pageIndex: 0,
     pageSize: 10,
   });
- 
+
   // Handler para crear una nueva fila en la tabla
-  
 
   // Handler para guardar una fila editada en la tabla
-  
- 
 
   // Obtén los datos de los prestatarios desde una API al montar el componente
 
-let r = 0; 
+  let r = 0;
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
         const response = await fetch("http://localhost:3001/api/loans");
-        const jsonData = await response.json();        
+        const jsonData = await response.json();
         setData(jsonData);
         setIsLoading(false);
-        r++
-        console.log(r)
+        r++;
+        console.log(r);
       } catch (error) {
         setErrorPopup(
           `Los datos no se pudieron cargar correctamente \n\n ${error}`,
@@ -102,11 +98,11 @@ let r = 0;
         setIsLoading(false);
 
         console.error("Error fetching borrowers:", error);
-      } 
+      }
     };
 
     fetchData();
-  },[]);
+  }, []);
 
   const columns = useMemo<MRT_ColumnDef<Loan>[]>(
     () => [
@@ -115,9 +111,8 @@ let r = 0;
         accessorKey: "id",
         enableColumnOrdering: false,
         enableSorting: false,
-        size:5,
-        align: "center"
-
+        size: 5,
+        align: "center",
       },
       {
         header: "Nombre Cliente",
@@ -143,7 +138,8 @@ let r = 0;
         header: "N. Cuotas",
         accessorKey: "numCuotas",
         size: 145,
-      }, {
+      },
+      {
         header: "C. Modalidad",
         accessorKey: "cuotasSegunModalidad",
         size: 145,
@@ -163,7 +159,7 @@ let r = 0;
         header: "Fecha",
         accessorKey: "fecha",
       },
-     
+
       {
         header: "Pagos Hechos",
         accessorKey: "paymentsMade",
@@ -171,7 +167,8 @@ let r = 0;
       {
         header: "Pagos Pendientes",
         accessorKey: "remainingPayments",
-      },{
+      },
+      {
         header: "Estado",
         accessorKey: "loanStatus",
       },
@@ -183,8 +180,8 @@ let r = 0;
     <Layout>
       {!isLoading && (
         <div className="h-full rounded-lg bg-white shadow ">
-          <MaterialReactTable 
-           enableRowActions
+          <MaterialReactTable
+            enableRowActions
             columns={columns}
             data={data}
             //optionally override the default column widths
@@ -193,14 +190,29 @@ let r = 0;
               minSize: 80,
               size: 150, //default size is usually 180
             }}
-
             enableColumnResizing
             columnResizeMode="onChange" //default
             localization={MRT_Localization_ES}
             renderRowActions={({ row, table }) => (
               <Box sx={{ display: "flex", gap: "1rem" }}>
-                <Tooltip arrow placement="right" title={row.getValue("loanStatus")}>
-                  <IconButton>
+                <Tooltip
+                  arrow
+                  placement="right"
+                  title={row.getValue("loanStatus")}
+                >
+                  <IconButton
+                    color={
+                      row.getValue("loanStatus") === "Completed"
+                        ? "primary" // Cambia el color a 'primary' cuando 'loanStatus' es 'Completed'
+                        : row.getValue("loanStatus") === "Pending"
+                        ? "secondary" // Cambia el color a 'secondary' cuando 'loanStatus' es 'Pending'
+                        : row.getValue("loanStatus") === "Rejected"
+                        ? "error" // Cambia el color a 'error' cuando 'loanStatus' es 'Rejected'
+                        : row.getValue("loanStatus") === "Approved"
+                        ? "success" // Cambia el color a 'success' cuando 'loanStatus' es 'Approved'
+                        : "default" // Cambia a otro color predeterminado si no coincide con ninguno de los casos anteriores
+                    }
+                  >
                     {row.getValue("loanStatus") === "Completed" ? (
                       <CheckCircleIcon />
                     ) : row.getValue("loanStatus") === "Pending" ? (
@@ -216,12 +228,10 @@ let r = 0;
                 </Tooltip>
               </Box>
             )}
-            
           />
-          
         </div>
       )}
-     
+
       {isLoading && (
         <div className="fixed bottom-0 left-0 right-0 top-0 flex  items-center justify-center bg-black bg-opacity-50">
           <div className="lds-dual-ring"></div>
