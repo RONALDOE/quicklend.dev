@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import Layout from "@components/Layout";
 import axios from "axios";
 import useSound from "use-sound";

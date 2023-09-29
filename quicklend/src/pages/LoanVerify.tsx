@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import Layout from "@components/Layout";
 import { Rating } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";

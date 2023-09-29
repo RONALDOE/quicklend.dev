@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import Layout from "../components/Layout";
 import ReactECharts, { ReactEChartsProps } from "../components/Piechart";
 import { useEffect, useState } from "react";

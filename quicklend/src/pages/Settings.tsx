@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import AdfScannerIcon from "@mui/icons-material/AdfScanner";

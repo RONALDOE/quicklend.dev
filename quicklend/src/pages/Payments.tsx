@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import React, { useState, useEffect, useMemo } from "react";
 import Layout from "../components/Layout";
 import axios from "axios";

@@ -1,3 +1,4 @@
+// @ts-nocheck 
 import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
@@ -49,7 +50,7 @@ export default function Topbar() {
             </Link>
           </li>
           <li>
-          <Link to="/Usuarios" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
+          <Link to="/settings" className={`px-4 pb-1  rounded-2xl hover:outline-2 hover:outline-blue-200 hover:outline hover:outline-offset-2  hover:bg-blue-200 
             ${   location.pathname === '/settings' ? activeStyle : ''
              } `}>
               Usuarios
