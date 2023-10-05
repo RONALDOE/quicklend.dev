@@ -1,4 +1,4 @@
-// @ts-nocheck 
+// @ts-nocheck
 import { faUserAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
@@ -28,6 +28,13 @@ export default function Login() {
   const [recoveringPassword, setRecoveringPassword] = useState<boolean>(false);
   const navigate = useNavigate();
   const { saveUser } = useUserContext();
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      // Realiza la acción deseada al presionar "Enter"
+      handleLogin();
+    }
+  };
 
   const handleLogin = async () => {
     try {
@@ -68,7 +75,7 @@ export default function Login() {
         "http://localhost:3001/api/auth/send-recovery-email",
         {
           email: email,
-        },
+        }
       );
 
       if (response.status === 200 && response.data.code) {
@@ -76,12 +83,12 @@ export default function Login() {
         setShowRecoveryForm(false);
         setCode(response.data.code);
       } else {
-        setError({state: true, msg: "Error al enviar codigo"})
+        setError({ state: true, msg: "Error al enviar codigo" });
 
         console.error("Error al enviar el correo de recuperación");
-    }
-} catch (error) {
-        setError({state: true, msg: "Correo Electronico No Encontrado"})
+      }
+    } catch (error) {
+      setError({ state: true, msg: "Correo Electronico No Encontrado" });
       console.error("Error al solicitar recuperación de contraseña", error);
     }
   };
@@ -97,19 +104,21 @@ export default function Login() {
   };
 
   const handleChangePassword = async () => {
-
-    if(newPassword !== newPasswordConfirm){
-        setError({state: true, msg: "Las contraseñas no coinciden"})
-        return
+    if (newPassword !== newPasswordConfirm) {
+      setError({ state: true, msg: "Las contraseñas no coinciden" });
+      return;
     }
     try {
-      const response = await fetch("http://localhost:3001/api/auth/changePassword", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, newPassword: newPassword }),
-      });
+      const response = await fetch(
+        "http://localhost:3001/api/auth/changePassword",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, newPassword: newPassword }),
+        }
+      );
 
       if (response.ok) {
         console.log("Contraseña cambiada exitosamente");
@@ -123,22 +132,23 @@ export default function Login() {
   };
 
   return (
-    <div className="loginContainer flex h-screen items-center justify-end">
-      <div className="mr-5 flex h-[40rem] w-96 flex-col items-center justify-center gap-4 rounded-xl border border-slate-400 bg-white p-2">
+    <div className='loginContainer flex h-screen items-center justify-end'>
+      <div className='mr-5 flex h-[40rem] w-96 flex-col items-center justify-center gap-4 rounded-xl border border-slate-400 bg-white p-2'>
         <FontAwesomeIcon
           icon={faUserAlt}
-          size="4x"
-          className="circle border-[3px] border-blue-700 p-5 text-blue-700"
+          size='4x'
+          className='circle border-[3px] border-blue-700 p-5 text-blue-700'
         />
-        <div className="w-2/3">
-          <label className="mb-2 block text-sm font-medium text-gray-900">
+        <div className='w-2/3'>
+          <label className='mb-2 block text-sm font-medium text-gray-900'>
             Usuario
           </label>
           <input
-            type="text"
-            id="username"
-            className="block w-full  rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+            type='text'
+            id='username'
+            className='block w-full  rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500'
             required
+            onKeyDown={handleKeyPress} // Controlador de eventos para "Enter"
             value={user}
             onChange={(e) => {
               setError({ state: false, msg: "" });
@@ -146,14 +156,15 @@ export default function Login() {
             }}
           />
         </div>
-        <div className="w-2/3">
-          <label className="mb-2 block text-sm font-medium text-gray-900">
+        <div className='w-2/3'>
+          <label className='mb-2 block text-sm font-medium text-gray-900'>
             Contraseña
           </label>
           <input
-            type="password"
-            id="password"
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+            type='password'
+            id='password'
+            className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500'
+            onKeyDown={handleKeyPress} // Controlador de eventos para "Enter"
             required
             value={password}
             onChange={(e) => {
@@ -163,55 +174,54 @@ export default function Login() {
           />
         </div>
         <button
-          type="button"
-          className="mb-2 mr-2 rounded-lg bg-blue-700 px-10 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300"
+          type='button'
+          className='mb-2 mr-2 rounded-lg bg-blue-700 px-10 py-2.5 text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300'
           onClick={handleLogin}
         >
           Entrar
         </button>
 
         {error?.state && (
-          <span className="text-center font-semibold text-red-500">
+          <span className='text-center font-semibold text-red-500'>
             {error.msg}
           </span>
         )}
         {showRecovery && (
           <span
-            className="cursor-pointer text-center font-semibold text-blue-500"
+            className='cursor-pointer text-center font-semibold text-blue-500'
             onClick={() => setShowRecoveryForm(true)}
           >
             Olvidé mi usuario/contraseña
           </span>
         )}
         {showRecoveryForm && !recoveringPassword && (
-          <div className="fixed bottom-0  left-0 right-0 top-0 z-50 flex  items-center justify-center bg-black bg-opacity-50">
-            <div className="flex  w-96 flex-col gap-12 rounded items-center justify-center bg-white px-2 py-2  ">
-              <p className="mb-4 mt-4 text-center text-xl font-bold">
+          <div className='fixed bottom-0  left-0 right-0 top-0 z-50 flex  items-center justify-center bg-black bg-opacity-50'>
+            <div className='flex  w-96 flex-col gap-12 rounded items-center justify-center bg-white px-2 py-2  '>
+              <p className='mb-4 mt-4 text-center text-xl font-bold'>
                 Recuperación De Acceso
               </p>
-              <div className="w-2/3 flex flex-col  items-center justify-center">
-                <label className="mb-2 block text-sm text-left w-full font-medium text-gray-900">
+              <div className='w-2/3 flex flex-col  items-center justify-center'>
+                <label className='mb-2 block text-sm text-left w-full font-medium text-gray-900'>
                   Correo Electrónico
                 </label>
                 <input
-                  type="text"
-                  id="email"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  type='text'
+                  id='email'
+                  className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500'
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <p className="text-red-500">{error.msg}</p>
-
+                <p className='text-red-500'>{error.msg}</p>
               </div>
               <button
-                className="-mt-10 rounded bg-green-400 px-3 py-1 text-black font-bold hover:bg-green-500 focus:outline-none"
+                className='-mt-10 rounded bg-green-400 px-3 py-1 text-black font-bold hover:bg-green-500 focus:outline-none'
                 onClick={handleRecoverPassword}
               >
                 Enviar Código de Verificación
               </button>
               <button
-                className="-mt-5 rounded bg-red-400 px-3 py-1 text-black font-bold hover:bg-red-500 focus:outline-none"
+                className='-mt-5 rounded bg-red-400 px-3 py-1 text-black font-bold hover:bg-red-500 focus:outline-none'
                 onClick={() => {
                   setShowRecoveryForm(false);
                 }}
@@ -222,88 +232,94 @@ export default function Login() {
           </div>
         )}
         {recoveringPassword && (
-          <div className="fixed bottom-0  left-0 right-0 top-0 z-50 flex  items-center justify-center bg-black bg-opacity-50">
-            <div className="flex  w-96 flex-col gap-12 rounded bg-white px-2 py-2 items-center justify-center text-left ">
-              <p className="mb-4 mt-4 text-center text-xl font-bold">
+          <div className='fixed bottom-0  left-0 right-0 top-0 z-50 flex  items-center justify-center bg-black bg-opacity-50'>
+            <div className='flex  w-96 flex-col gap-12 rounded bg-white px-2 py-2 items-center justify-center text-left '>
+              <p className='mb-4 mt-4 text-center text-xl font-bold'>
                 Restablecer Contraseña
               </p>
-              <div className="w-2/3 flex flex-col items-center justify-center">
-                <label className="mb-2 block text-sm font-medium text-gray-900 w-full">
+              <div className='w-2/3 flex flex-col items-center justify-center'>
+                <label className='mb-2 block text-sm font-medium text-gray-900 w-full'>
                   Nueva contraseña
                 </label>
                 <input
-                  type="text"
-                  id="email"
-                  className="block mb-4 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  type='text'
+                  id='email'
+                  className='block mb-4 w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500'
                   required
                   value={newPassword}
                   onChange={(e) => {
                     setError({ state: false, msg: "" });
-                    setNewPassword(e.target.value)}}
+                    setNewPassword(e.target.value);
+                  }}
                 />
-                <label className="mb-2 block text-sm font-medium text-gray-900 w-full   ">
+                <label className='mb-2 block text-sm font-medium text-gray-900 w-full   '>
                   Confirme su nueva contraseña
                 </label>
                 <input
-                  type="text"
-                  id="email"
-                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                  type='text'
+                  id='email'
+                  className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500'
                   required
                   value={newPasswordConfirm}
                   onChange={(e) => {
                     setError({ state: false, msg: "" });
-                    setNewPasswordConfirm(e.target.value)}}
+                    setNewPasswordConfirm(e.target.value);
+                  }}
                 />
               </div>
-              {error.state &&(<p className="text-red-500">{error.msg}</p>)}
-              
+              {error.state && <p className='text-red-500'>{error.msg}</p>}
+
               <button
-                className="-mt-10 rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700 focus:outline-none"
+                className='-mt-10 rounded bg-green-600 px-3 py-1 text-white hover:bg-green-700 focus:outline-none'
                 onClick={handleChangePassword}
               >
                 Reestablecer Contraseña
               </button>
               <button
-                className="-mt-5 rounded px-20 bg-red-600 px-3 py-1 text-white hover:bg-red-700 focus:outline-none"
+                className='-mt-5 rounded px-20 bg-red-600 px-3 py-1 text-white hover:bg-red-700 focus:outline-none'
                 onClick={() => {
                   setRecoveringPassword(false);
                 }}
-              >Cerrar</button>
+              >
+                Cerrar
+              </button>
             </div>
           </div>
         )}
         {showCodeInput && (
-          <div className=" fixed bottom-0 left-0 right-0 top-0 flex  items-center justify-center bg-black bg-opacity-50">
-            <div className="flex w-96 flex-col items-center justify-center gap-4 rounded bg-white px-2 py-2">
-              <p className="text-2xl font-bold">Ingrese su codigo secreto</p>
+          <div className=' fixed bottom-0 left-0 right-0 top-0 flex  items-center justify-center bg-black bg-opacity-50'>
+            <div className='flex w-96 flex-col items-center justify-center gap-4 rounded bg-white px-2 py-2'>
+              <p className='text-2xl font-bold'>Ingrese su codigo secreto</p>
               <input
-                type="password"
-                name="clave"
-                className="w-40 rounded border p-1 "
-                placeholder="Ingrese su codigo secreto"
+                type='password'
+                name='clave'
+                className='w-40 rounded border p-1 '
+                placeholder='Ingrese su codigo secreto'
                 value={typedCode}
                 onChange={(e) => {
-                    setError({ state: false, msg: "" });
+                  setError({ state: false, msg: "" });
 
-                    setTypedCode(e.target.value)}}
+                  setTypedCode(e.target.value);
+                }}
               />
               <button
-                className="ml-2 rounded bg-green-500 px-3 py-1  text-xl font-bold text-white hover:bg-green-600"
+                className='ml-2 rounded bg-green-500 px-3 py-1  text-xl font-bold text-white hover:bg-green-600'
                 onClick={handleVerifyCode}
               >
                 Autorizar
               </button>
-              
+
               {error.state && (
                 <>
-                  <p className="text-red-500">{error.msg}</p>
-                  
+                  <p className='text-red-500'>{error.msg}</p>
                 </>
               )}
-              <p className="text-blue-500 cursor-pointer font-semibold" onClick={handleRecoverPassword}>
-                    Reenviar Codigo
-                    
-                  </p>
+              <p
+                className='text-blue-500 cursor-pointer font-semibold'
+                onClick={handleRecoverPassword}
+              >
+                Reenviar Codigo
+              </p>
             </div>
           </div>
         )}

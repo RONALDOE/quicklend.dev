@@ -1,19 +1,14 @@
 {
   "name": "quicklend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc --skipLibCheck && vite build && electron-builder",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "build": {
-    "files": [
-      "index.html",
-      "server/**/*"
-    ]
-  },
+ 
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",

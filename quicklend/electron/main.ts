@@ -1,6 +1,5 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
-import { spawn } from 'child_process';
 
 process.env.DIST = path.join(__dirname, '../dist');
 process.env.PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public');
@@ -32,20 +31,7 @@ function createWindow() {
   }
 
   // Iniciar el servidor
-  const serverProcess = spawn('node', [path.join(__dirname, '..', 'server', 'index.js')]);
-
-  serverProcess.stdout.on('data', (data) => {
-    console.log(`Salida del servidor: ${data}`);
-  });
-
-  serverProcess.stderr.on('data', (data) => {
-    console.error(`Error del servidor: ${data}`);
-  });
-
-  app.on('before-quit', () => {
-    // Detener el servidor cuando se cierre la aplicación
-    serverProcess.kill();
-  });
+  
 }
 
 app.on('window-all-closed', () => {

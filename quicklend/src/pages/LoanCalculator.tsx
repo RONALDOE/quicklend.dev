@@ -248,12 +248,12 @@ export default function LoanCalculator() {
   //   }
   // };
 
-  const handleContinue = () =>{
-    // history.push("/dashboard");
-  }
+  // const handleContinue = () =>{
+  //   // history.push("/dashboard");
+  // }
 
-  const [drafts, setDrafts] = useState<string[]>([]); // Estado para almacenar los borradores
-  const [selectedDraft, setSelectedDraft] = useState<string | null>(null); // Estado para el borrador seleccionado
+  // const [drafts, setDrafts] = useState<string[]>([]); // Estado para almacenar los borradores
+  // const [selectedDraft, setSelectedDraft] = useState<string | null>(null); // Estado para el borrador seleccionado
 
 
   // const saveDraft = () => {
@@ -295,98 +295,98 @@ export default function LoanCalculator() {
   // };
 
   
-  useEffect(() => {
-    // Cargar los borradores desde la base de datos
-    const fetchDrafts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/api/loans/drafts");
-        const draftData = response.data; // Asumiendo que los borradores se devuelven como un array de objetos
-        setDrafts(draftData);
-      } catch (error) {
-        console.error("Error al cargar los borradores:", error);
-      }
-    };
+  // useEffect(() => {
+  //   // Cargar los borradores desde la base de datos
+  //   const fetchDrafts = async () => {
+  //     try {
+  //       const response = await axios.get("http://localhost:3001/api/loans/drafts");
+  //       const draftData = response.data; // Asumiendo que los borradores se devuelven como un array de objetos
+  //       setDrafts(draftData);
+  //     } catch (error) {
+  //       console.error("Error al cargar los borradores:", error);
+  //     }
+  //   };
 
-    fetchDrafts();
-  }, []);
+  //   fetchDrafts();
+  // }, []);
 
-  const loadDraft = (draft: string) => {
-    const draftData = JSON.parse(draft);
-    setFormData({
-     ...draftData
-    });
-    setSelectedDraft(draft);
-    setSuccessPopup("Borrador Cargado");
-  };
+  // const loadDraft = (draft: string) => {
+  //   const draftData = JSON.parse(draft);
+  //   setFormData({
+  //    ...draftData
+  //   });
+  //   setSelectedDraft(draft);
+  //   setSuccessPopup("Borrador Cargado");
+  // };
 
   
 
-  const handleSaveDraft = async () => {
-    // Validar los campos aquí antes de enviar
+  // const handleSaveDraft = async () => {
+  //   // Validar los campos aquí antes de enviar
 
-    if (
-      !formData.borrower ||
-      !formData.importeCredito ||
-      !formData.modalidad ||
-      !formData.tasa ||
-      !formData.numCuotas ||
-      !formData.cuotasSegunModalidad
-    ) {
-      setErrorPopup("Por favor, completa todos los campos.");
-      return;
-    }
+  //   if (
+  //     !formData.borrower ||
+  //     !formData.importeCredito ||
+  //     !formData.modalidad ||
+  //     !formData.tasa ||
+  //     !formData.numCuotas ||
+  //     !formData.cuotasSegunModalidad
+  //   ) {
+  //     setErrorPopup("Por favor, completa todos los campos.");
+  //     return;
+  //   }
 
-    // Convertir valores formateados a valores numéricos
-    const importeCredito = parseFloat(
-      formData.importeCredito.replace(',', ""),
-    );
-    const totalAPagar = parseFloat(
-      formData.totalAPagar.replace(',', ""),
-    );
-    const tasa = parseFloat(formData.tasa);
-    const numCuotas = parseInt(formData.numCuotas);
-    const cuotasSegunModalidad = parseInt(formData.cuotasSegunModalidad);
-    console.log(importeCredito)
+  //   // Convertir valores formateados a valores numéricos
+  //   const importeCredito = parseFloat(
+  //     formData.importeCredito.replace(',', ""),
+  //   );
+  //   const totalAPagar = parseFloat(
+  //     formData.totalAPagar.replace(',', ""),
+  //   );
+  //   const tasa = parseFloat(formData.tasa);
+  //   const numCuotas = parseInt(formData.numCuotas);
+  //   const cuotasSegunModalidad = parseInt(formData.cuotasSegunModalidad);
+  //   console.log(importeCredito)
 
-    // Crear el objeto con los valores numéricos para enviar a la API
-    const requestData = {
-      ...formData,
-      importeCredito,
-      tasa,
-      numCuotas,
-      cuotasSegunModalidad,
-      totalAPagar
-    };
+  //   // Crear el objeto con los valores numéricos para enviar a la API
+  //   const requestData = {
+  //     ...formData,
+  //     importeCredito,
+  //     tasa,
+  //     numCuotas,
+  //     cuotasSegunModalidad,
+  //     totalAPagar
+  //   };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:3001/api/loans/draft",
-        requestData,
-      );
+  //   try {
+  //     const response = await axios.post(
+  //       "http://localhost:3001/api/loans/draft",
+  //       requestData,
+  //     );
 
-      console.log(response.data);
+  //     console.log(response.data);
 
-      setFormData({
-        borrower: "",
-        importeCredito: "",
-        modalidad: "",
-        tasa: "",
-        numCuotas: "",
-        importeCuotas: "",
-        totalAPagar: "",
-        fecha: "",
-        cuotasSegunModalidad: "",
-        interes: "",
-      });
+  //     setFormData({
+  //       borrower: "",
+  //       importeCredito: "",
+  //       modalidad: "",
+  //       tasa: "",
+  //       numCuotas: "",
+  //       importeCuotas: "",
+  //       totalAPagar: "",
+  //       fecha: "",
+  //       cuotasSegunModalidad: "",
+  //       interes: "",
+  //     });
 
-      setSuccessPopup("Borrador Guardado Con Exito");
-    } catch (error) {
-      console.error("Error al enviar los datos al backend:", error);
-      setErrorPopup(
-        "Hubo un error al enviar los datos. Por favor, intenta nuevamente.",
-      );
-    }
-  };
+  //     setSuccessPopup("Borrador Guardado Con Exito");
+  //   } catch (error) {
+  //     console.error("Error al enviar los datos al backend:", error);
+  //     setErrorPopup(
+  //       "Hubo un error al enviar los datos. Por favor, intenta nuevamente.",
+  //     );
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

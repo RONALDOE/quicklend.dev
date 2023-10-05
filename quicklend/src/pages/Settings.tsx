@@ -1,4 +1,4 @@
-// @ts-nocheck 
+// @ts-nocheck
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import AdfScannerIcon from "@mui/icons-material/AdfScanner";
@@ -49,52 +49,52 @@ export default function Settings() {
 
   function Sidebar() {
     return (
-      <div className=" -ml-2 w-1/4 flex-col rounded bg-white p-3 text-2xl shadow">
-        <div className="space-y-3">
-          <div className="flex items-center">
-            <h2 className="w-full text-center text-2xl font-semibold">
+      <div className=' -ml-2 w-1/4 flex-col rounded bg-white p-3 text-2xl shadow'>
+        <div className='space-y-3'>
+          <div className='flex items-center'>
+            <h2 className='w-full text-center text-2xl font-semibold'>
               Ajustes
             </h2>
           </div>
-          <div className="flex-1">
-            <ul className="space-y-1 pb-4 pt-2 text-sm">
-              <li className="rounded-sm">
+          <div className='flex-1'>
+            <ul className='space-y-1 pb-4 pt-2 text-sm'>
+              <li className='rounded-sm'>
                 <p
-                  className="flex cursor-pointer items-center space-x-3 rounded-md p-2"
+                  className='flex cursor-pointer items-center space-x-3 rounded-md p-2'
                   onClick={() => {
                     setUserShowing(true);
                     setReportsShowing(false);
                     setQueryShowing(false);
                   }}
                 >
-                  <SupervisedUserCircleIcon fontSize="large" />
-                  <span className="text-xl font-bold">Usuarios</span>
+                  <SupervisedUserCircleIcon fontSize='large' />
+                  <span className='text-xl font-bold'>Usuarios</span>
                 </p>
               </li>
-              <li className="rounded-sm">
+              <li className='rounded-sm'>
                 <p
-                  className="flex cursor-pointer items-center space-x-3 rounded-md p-2"
+                  className='flex cursor-pointer items-center space-x-3 rounded-md p-2'
                   onClick={() => {
                     setUserShowing(false);
                     setReportsShowing(true);
                     setQueryShowing(false);
                   }}
                 >
-                  <AdfScannerIcon fontSize="large" />
-                  <span className="text-2xl">Reportes</span>
+                  <AdfScannerIcon fontSize='large' />
+                  <span className='text-2xl'>Reportes</span>
                 </p>
               </li>
-              <li className="rounded-sm">
+              <li className='rounded-sm'>
                 <p
-                  className="flex cursor-pointer items-center space-x-3 rounded-md p-2"
+                  className='flex cursor-pointer items-center space-x-3 rounded-md p-2'
                   onClick={() => {
                     setUserShowing(false);
                     setReportsShowing(false);
                     setQueryShowing(true);
                   }}
                 >
-                  <DataObjectIcon fontSize="large" />
-                  <span className="text-2xl">Consultas</span>
+                  <DataObjectIcon fontSize='large' />
+                  <span className='text-2xl'>Consultas</span>
                 </p>
               </li>
             </ul>
@@ -105,10 +105,8 @@ export default function Settings() {
   }
   return (
     <Layout>
-      <div className="flex h-full w-full">
-
-          <UsersTable />
-       
+      <div className='flex h-full w-full'>
+        <UsersTable />
       </div>
     </Layout>
   );
@@ -166,7 +164,7 @@ const UsersTable = () => {
         size: 100,
       },
     ],
-    [],
+    []
   );
 
   const handleCreateNewRow = async (values: User) => {
@@ -174,7 +172,7 @@ const UsersTable = () => {
       // Send a POST request to create the new user
       const response = await axios.post(
         `http://localhost:3001/api/users`,
-        values,
+        values
       );
 
       const existingCustomerCount = data.length;
@@ -203,11 +201,11 @@ const UsersTable = () => {
     }
   };
   return (
-    <div >
+    <div>
       {!isLoading && (
         <div
-          className=" mx-8 my-4 h-full  rounded-lg bg-white shadow"
-          id="userTableWrapper"
+          className=' mx-8 my-4 h-full  rounded-lg bg-white shadow'
+          id='userTableWrapper'
         >
           <MaterialReactTable
             columns={columns}
@@ -222,21 +220,21 @@ const UsersTable = () => {
             }}
             muiTableBodyProps={{}}
             enableColumnResizing
-            columnResizeMode="onChange"
+            columnResizeMode='onChange'
             localization={MRT_Localization_ES}
             renderTopToolbarCustomActions={() => (
               <Button
-                color="secondary"
+                color='secondary'
                 onClick={() => setCreateModalOpen(true)}
-                variant="contained"
+                variant='contained'
               >
                 Crear Nuevo Usuario
               </Button>
             )}
           />
           {isLoading && (
-            <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="lds-dual-ring"></div>
+            <div className='fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black bg-opacity-50'>
+              <div className='lds-dual-ring'></div>
             </div>
           )}
           <CreateNewAccountModal
@@ -247,9 +245,6 @@ const UsersTable = () => {
           />
         </div>
       )}
-
-     
-            
     </div>
   );
 };
@@ -268,12 +263,17 @@ export const CreateNewAccountModal = ({
   onClose,
   onSubmit,
 }: CreateModalProps) => {
-  const [values, setValues] = useState<any>(() =>
-    columns.reduce((acc, column) => {
+  const [values, setValues] = useState<any>(() => {
+    const initialValues = columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ""] = "";
       return acc;
-    }, {} as any),
-  );
+    }, {} as any);
+
+    // Agregar la columna "psswd" al estado values
+    initialValues.psswd = ""; // Puedes establecer un valor inicial si es necesario
+
+    return initialValues;
+  });
 
   const newColumns = columns.slice(1); //All the columns except the ID
   const indexNew = columns.length + 1; //ID of the new borrower
@@ -286,7 +286,7 @@ export const CreateNewAccountModal = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Crear Nuevo Usuario</DialogTitle>
+      <DialogTitle textAlign='center'>Crear Nuevo Usuario</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
@@ -306,12 +306,20 @@ export const CreateNewAccountModal = ({
                 }
               />
             ))}
+            <TextField
+              key={"password"}
+              label={"password"}
+              name={"psswd"}
+              onChange={(e) =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
           </Stack>
         </form>
       </DialogContent>
       <DialogActions sx={{ p: "1.25rem" }}>
         <Button onClick={onClose}>Cancelar</Button>
-        <Button color="secondary" onClick={handleSubmit} variant="contained">
+        <Button color='secondary' onClick={handleSubmit} variant='contained'>
           Crear Nuevo Cliente
         </Button>
       </DialogActions>
@@ -376,12 +384,11 @@ export const CreateNewAccountModal = ({
 //         },
 //         body: JSON.stringify({ query }), // Enviar la consulta al servidor
 //       });
-      
-      
+
 //       if (!response.ok) {
 //         throw new Error("Error al ejecutar la consulta.");
 //       }
-      
+
 //       // Obtener el resultado de la respuesta JSON
 //       const data = await response.json();
 //       console.log(typeof(data))

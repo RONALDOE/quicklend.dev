@@ -94,7 +94,7 @@ export default function Customers() {
         console.log(r);
       } catch (error) {
         setErrorPopup(
-          `Los datos no se pudieron cargar correctamente \n\n ${error}`,
+          `Los datos no se pudieron cargar correctamente `,
         );
         setIsLoading(false);
 
